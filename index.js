@@ -20,6 +20,14 @@ const typeDefs = gql`
   }
 `;
 
+const exampleToDoTask = [
+  {
+    userName: "someone",
+    text: "sdasa",
+    isCompleted: false
+  }
+];
+
 const resolvers = {
   Query: {
     getToDoTasks: async () => {
