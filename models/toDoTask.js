@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const taskSchema = new mongoose.Schema({
+const toDoTaskSchema = new mongoose.Schema({
   userName: {
     type: String,
     required: false,
@@ -16,3 +16,9 @@ const taskSchema = new mongoose.Schema({
     default: false
   }
 });
+
+const ToDoTask = mongoose.model("toDoTask", toDoTaskSchema);
+
+module.exports = {
+  ToDoTask
+};

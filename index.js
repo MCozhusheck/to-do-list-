@@ -1,37 +1,41 @@
 const { ApolloServer, gql } = require("apollo-server");
-const connect = require("./connect");
+const express = require("express");
+require("./config");
+const { ToDoTask } = require("./models/toDoTask");
 
 const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
+  type ToDoTask {
+    id: ID!
+    userName: String
+    text: String
+    isCompleted: Boolean
   }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
-    books: [Book]
+    getToDoTasks: [ToDoTask]
+  }
+
+  type Mutation {
+    addToDoTask(userName: String, text: String!, isCompleted: Boolean): ToDoTask
   }
 `;
 
-const books = [
-  {
-    title: "Harry Potter and the Chamber of Secrets",
-    author: "J.K. Rowling"
-  },
-  {
-    title: "Jurassic Park",
-    author: "Michael Crichton"
-  }
-];
-
 const resolvers = {
   Query: {
-    books: () => books
+    getToDoTasks: async () => {
+      const response = await ToDoTask.find({}).exec();
+      return response;
+    }
+  },
+  Mutation: {
+    addToDoTask: async (_, args) => {
+      try {
+        let response = await ToDoTask.create(args);
+        return response;
+      } catch (e) {
+        return e.message;
+      }
+    }
   }
 };
 
